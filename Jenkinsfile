@@ -10,13 +10,21 @@ pipeline {
     }
 
     stages {
+        stage('Build JAR') {
+            steps {
+                dir('chat-backend') {
+                    sh './gradlew clean build'
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 sh "docker build -t ${IMAGE_NAME}:latest ."
                 sh "docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:${TAG}"
             }
         }
-        
+
         stage('Login to Harbor') {
             steps {
                 withCredentials([usernamePassword(credentialsId: "${HARBOR_CREDENTIALS_ID}", usernameVariable: 'HARBOR_USER', passwordVariable: 'HARBOR_PASS')]) {
