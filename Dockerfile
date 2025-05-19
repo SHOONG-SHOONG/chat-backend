@@ -2,7 +2,7 @@ FROM eclipse-temurin:17-jre-jammy
 
 WORKDIR /app
 
-COPY build/libs/your-app-name-*.jar app.jar
+COPY chat-backend/*.jar app.jar
 
 EXPOSE 8080
 
