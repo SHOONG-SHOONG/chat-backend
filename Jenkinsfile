@@ -1,9 +1,76 @@
-FROM eclipse-temurin:17-jre-jammy
+pipeline {
+    agent any
 
-WORKDIR /app
+    environment {
+        IMAGE_NAME = "chat-backend/websocket-server/${env.JOB_BASE_NAME}"
+        TAG = "${BUILD_NUMBER}"
+        HARBOR_CREDENTIALS_ID = "Harbor"
+        SERVICE_NAME = "${env.JOB_BASE_NAME}"
+        HARBOR_URL = "harbor.shoong.store"
+    }
 
-COPY build/libs/your-app-name-*.jar app.jar
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                sh "docker build -t ${IMAGE_NAME}:latest ."
+                sh "docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:${TAG}"
+            }
+        }
+        
+        stage('Deploy with Helm') {
+				    steps {
+				        script {
+				            sh """
+				                helm upgrade --install kafka ./charts/kafka \
+				                  --namespace kafka \
+				                  --set image.repository=${IMAGE_NAME} \
+				                  --set image.tag=${TAG} \
+				                  --set image.pullPolicy=IfNotPresent \
+				                  --wait
+				            """
+				        }
+				    }
+				}
 
-EXPOSE 8080
+        stage('Login to Harbor') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: "${HARBOR_CREDENTIALS_ID}", usernameVariable: 'HARBOR_USER', passwordVariable: 'HARBOR_PASS')]) {
+                    sh "echo \$HARBOR_PASS | docker login ${HARBOR_URL} -u \$HARBOR_USER --password-stdin"
+                }
+            }
+        }
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+        stage('Push Docker Image') {
+            steps {
+                sh "docker push ${IMAGE_NAME}:latest"
+                sh "docker push ${IMAGE_NAME}:${TAG}"
+            }
+        }
+
+        stage('Update Manifest') {
+            steps {
+                script {
+                    sh """
+                        rm -rf k8s-manifests
+                        git clone https://github.com/your-org/k8s-manifests.git
+                        cd k8s-manifests/apps/websocket
+                        sed -i 's|image: .*|image: ${IMAGE_NAME}:${TAG}|' deployment.yaml
+                        git config user.name "jenkins-bot"
+                        git config user.email "jenkins@shoong.com"
+                        git commit -am "Update websocket image to ${TAG}"
+                        git push origin main
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "🎀 ${env.SERVICE_NAME} WebSocket 서버 자동 빌드 완료!"
+        }
+        failure {
+            echo "😡 ${env.SERVICE_NAME} WebSocket 빌드 실패!"
+        }
+    }
+}
