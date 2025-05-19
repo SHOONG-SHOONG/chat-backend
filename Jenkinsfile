@@ -17,21 +17,6 @@ pipeline {
             }
         }
         
-        stage('Deploy with Helm') {
-				    steps {
-				        script {
-				            sh """
-				                helm upgrade --install kafka ./charts/kafka \
-				                  --namespace kafka \
-				                  --set image.repository=${IMAGE_NAME} \
-				                  --set image.tag=${TAG} \
-				                  --set image.pullPolicy=IfNotPresent \
-				                  --wait
-				            """
-				        }
-				    }
-				}
-
         stage('Login to Harbor') {
             steps {
                 withCredentials([usernamePassword(credentialsId: "${HARBOR_CREDENTIALS_ID}", usernameVariable: 'HARBOR_USER', passwordVariable: 'HARBOR_PASS')]) {
