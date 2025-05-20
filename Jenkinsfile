@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "harbor.shoong.store/chat-backend/${env.JOB_BASE_NAME}"
+        IMAGE_NAME = "harbor.shoong.store/chat-backend/websocket-server"
         TAG = "${BUILD_NUMBER}"
         HARBOR_CREDENTIALS_ID = "Harbor"
         SERVICE_NAME = "${env.JOB_BASE_NAME}"
