@@ -13,6 +13,7 @@ pipeline {
         stage('Build JAR') {
             steps {
                 dir('chat-backend') {
+                    sh 'chmod +x ./gradlew'
                     sh './gradlew clean build'
                 }
             }
