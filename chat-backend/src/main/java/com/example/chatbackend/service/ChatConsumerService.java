@@ -12,7 +12,7 @@ public class ChatConsumerService {
 
     @KafkaListener(topics = "topic-chat", groupId = "chat")
     public void listen(String message) {
-        System.out.println("Received: " + message);
+        System.out.println("Received message: " + message);
         chatWebSocketHandler.broadcast(message);
     }
 }
