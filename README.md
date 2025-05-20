@@ -1,3 +1,3 @@
 # chat-service
 
-jenkins test6
+jenkins test7
