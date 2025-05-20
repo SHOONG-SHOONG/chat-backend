@@ -10,22 +10,12 @@ pipeline {
     }
 
     stages {
-        stage('Build JAR') {
+		    stage('Clone Repo') {
             steps {
-                dir('chat-backend') {
-                    sh '''
-                        echo "gradlew 존재 여부:"
-                        ls -l gradlew || { echo "❌ gradlew not found"; exit 1; }
-
-                        echo "실행 권한 부여:"
-                        chmod +x gradlew
-
-                        echo "Gradle 빌드 시작:"
-                        ./gradlew clean build -x test
-                    '''
-                }
+                git url: 'https://github.com/SHOONG-SHOONG/chat-backend.git', branch: 'develop'
             }
         }
+        
 
         stage('Build Docker Image') {
             steps {
@@ -56,11 +46,11 @@ pipeline {
                         rm -rf k8s-manifests
                         git clone https://github.com/your-org/k8s-manifests.git
                         cd k8s-manifests/apps/websocket
-                        sed -i 's|image: .*|image: ${IMAGE_NAME}:${TAG}|' deployment.yaml
+                        sed -i "s|image: harbor.shoong.store/chat-backend/develop:[^[:space:]]*|image: ${IMAGE_NAME}:${TAG}|" deployment.yaml
                         git config user.name "jenkins-bot"
                         git config user.email "jenkins@shoong.com"
                         git commit -am "Update websocket image to ${TAG}"
-                        git push origin main
+                        git push origin develop
                     """
                 }
             }
