@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class ChatDBService {
     private final ChatMessageRepository chatMessageRepository;
 
-    @KafkaListener(topics = "chat-topic", groupId = "chat-db")
+    @KafkaListener(topics = "topic-chat", groupId = "chat-db")
     public void listen(String message) {
 
         ChatMessage chatMessage = new ChatMessage(message);
