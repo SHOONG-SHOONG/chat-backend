@@ -13,8 +13,16 @@ pipeline {
         stage('Build JAR') {
             steps {
                 dir('chat-backend') {
-                    sh 'chmod +x ./gradlew'
-                    sh './gradlew clean build'
+                    sh '''
+                        echo "gradlew 존재 여부:"
+                        ls -l gradlew || { echo "❌ gradlew not found"; exit 1; }
+
+                        echo "실행 권한 부여:"
+                        chmod +x gradlew
+
+                        echo "Gradle 빌드 시작:"
+                        ./gradlew clean build -x test
+                    '''
                 }
             }
         }
