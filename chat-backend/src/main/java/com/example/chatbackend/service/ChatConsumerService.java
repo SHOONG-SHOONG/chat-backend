@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class ChatConsumerService {
     private final ChatWebSocketHandler chatWebSocketHandler;
 
-    @KafkaListener(topics = "chat-topic", groupId = "chat")
+    @KafkaListener(topics = "topic-chat", groupId = "chat")
     public void listen(String message) {
         System.out.println("Received: " + message);
         chatWebSocketHandler.broadcast(message);
