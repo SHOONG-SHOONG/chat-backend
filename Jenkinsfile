@@ -44,7 +44,7 @@ pipeline {
                 script {
                     sh """
                         rm -rf k8s-manifests
-                        git clone https://github.com/your-org/k8s-manifests.git
+                        git clone https://github.com/SHOONG-SHOONG/k8s-manifests.git
                         cd k8s-manifests/apps/websocket
                         sed -i "s|image: harbor.shoong.store/chat-backend/develop:[^[:space:]]*|image: ${IMAGE_NAME}:${TAG}|" deployment.yaml
                         git config user.name "jenkins-bot"
