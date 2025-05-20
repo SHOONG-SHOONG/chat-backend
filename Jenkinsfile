@@ -53,7 +53,7 @@ pipeline {
                 cd k8s-manifests/apps/chat-backend
         
                 # 3. 이미지 태그 교체
-                sed -i "s|image: harbor.shoong.store/chat-backend/develop:[^[:space:]]*|image: ${IMAGE_NAME}:${TAG}|" deployment.yaml
+                sed -i "s|image: harbor.shoong.store/chat-backend/[^:]*:[^[:space:]]*|image: ${IMAGE_NAME}:${TAG}|" deployment.yaml
         
                 # 4. commit & push
                 git config user.name "jenkins-bot"
