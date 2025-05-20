@@ -11,6 +11,6 @@ public class ChatProducerService {
 
     public void sendMessage(String message) {
         System.out.println(message);
-        kafkaTemplate.send("chat-topic", message);
+        kafkaTemplate.send("topic-chat", message);
     }
 }
