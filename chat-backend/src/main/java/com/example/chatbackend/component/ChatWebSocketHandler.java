@@ -36,4 +36,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         }
     }
 
+    public int getViewerCount() {
+        return sessions.size();
+    }
+
 }
