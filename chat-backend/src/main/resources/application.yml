@@ -8,5 +8,5 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://${MONGO_DB_URI}:${MONGO_DB_PORT}/${MONGO_DB_NAME}
+      uri: ${MONGO_DB_URI}
       auto-index-creation: true
