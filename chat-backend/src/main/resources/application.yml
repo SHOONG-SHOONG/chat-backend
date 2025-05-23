@@ -10,3 +10,6 @@ spring:
     mongodb:
       uri: mongodb://${MONGO_DB_URI}:${MONGO_DB_PORT}/${MONGO_DB_NAME}
       auto-index-creation: true
+server:
+  servlet:
+    context-path: /chat
