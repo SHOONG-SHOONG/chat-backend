@@ -14,7 +14,7 @@ public class ViewerCountController {
     }
 
     @GetMapping("/viewer-count")
-    public int getViewerCount() {
+    public Long getViewerCount() {
         return chatWebSocketHandler.getViewerCount();
     }
 }
