@@ -16,3 +16,13 @@ spring:
 server:
   servlet:
     context-path: /chat
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "prometheus,health,metrics"
+  prometheus:
+    metrics:
+      export:
+        enabled: true
