@@ -10,4 +10,5 @@ import lombok.Setter;
 public class MessageRequestDto {
     private String name;
     private String content;
+    private Long liveId;
 }
