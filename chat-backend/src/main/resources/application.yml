@@ -15,8 +15,6 @@ spring:
       port: ${REDIS_PORT}
 server:
   port: 8085
-  servlet:
-    context-path: /chat
 
 management:
   endpoints:
