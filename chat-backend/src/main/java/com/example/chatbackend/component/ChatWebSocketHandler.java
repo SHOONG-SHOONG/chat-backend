@@ -63,4 +63,17 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         stringRedisTemplate.opsForValue().set(REDIS_VIEWER_COUNT_KEY, "0");
     }
 
+    public void closeAllSessions() {
+        synchronized (sessions) {
+            for (WebSocketSession session : sessions) {
+                try {
+                    session.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            sessions.clear();
+        }
+    }
+
 }
